@@ -80,17 +80,17 @@ class Robots extends ConfigResource
             static::cleanRobotSTxt();
 
             static::robots()->filter()->each(function($robot) {
-                static::appendToRobots('User-agent:'. $robot['user_agent']);
+                static::appendToRobots('User-agent: '. $robot['user_agent']);
                 if(intval($robot['crawl_delay']) > 0)
-                    static::appendToRobots('Crawl-delay:'. $robot['crawl_delay']);
+                    static::appendToRobots('Crawl-delay: '. $robot['crawl_delay']);
                 collect($robot['allow'])->filter()->each(function($allow) {
-                    static::appendToRobots('Allow:'. static::ensureSlash($allow));
+                    static::appendToRobots('Allow: '. $allow);
                 });
                 collect($robot['disallow'])->filter()->each(function($disallow) {
-                    static::appendToRobots('Disallow:'. static::ensureSlash($disallow));
+                    static::appendToRobots('Disallow: '. $disallow);
                 });
                 collect($robot['sitemap'])->filter()->each(function($sitemap) {
-                    static::appendToRobots('Sitemap:'. $sitemap);
+                    static::appendToRobots('Sitemap: '. $sitemap);
                 });
                 
                 static::appendToRobots("\r\n");
@@ -121,14 +121,5 @@ class Robots extends ConfigResource
         \File::append(public_path('robots.txt'), $text."\r\n"); 
 
         return static::class;
-    }
-
-    public static function ensureSlash($dir)
-    {
-        if(Str::startsWith($dir, '*')) {
-            return $dir;
-        }
-
-        return '/'.ltrim($dir, '/');
     }
 }
