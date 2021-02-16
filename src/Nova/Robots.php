@@ -81,7 +81,8 @@ class Robots extends ConfigResource
 
             static::robots()->filter()->each(function($robot) {
                 static::appendToRobots('User-agent:'. $robot['user_agent']);
-                static::appendToRobots('Crawl-delay:'. $robot['crawl_delay']);
+                if(intval($robot['crawl_delay']) > 0)
+                    static::appendToRobots('Crawl-delay:'. $robot['crawl_delay']);
                 collect($robot['allow'])->filter()->each(function($allow) {
                     static::appendToRobots('Allow:'. static::ensureSlash($allow));
                 });
